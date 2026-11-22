@@ -1,11 +1,12 @@
 import json
 
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_GET, require_POST
 
 User = get_user_model()
 
@@ -17,7 +18,7 @@ def _body(request):
         return {}
 
 
-@csrf_exempt  # temporary: removed when we add sessions/tokens
+
 @require_POST
 def register(request):
     data = _body(request)
@@ -51,7 +52,7 @@ def register(request):
     return JsonResponse({"id": user.id, "username": user.username}, status=201)
 
 
-@csrf_exempt  # temporary
+
 @require_POST
 def login_check(request):
     data = _body(request)
@@ -61,4 +62,24 @@ def login_check(request):
     )
     if user is None:
         return JsonResponse({"errors": {"form": "Invalid username or password."}}, status=401)
+    auth_login(request, user)
     return JsonResponse({"id": user.id, "username": user.username})
+
+
+@require_POST
+def logout_view(request):
+    auth_logout(request)
+    return JsonResponse({"ok": True})
+
+
+@require_GET
+def me(request):
+    if request.user.is_authenticated:
+        return JsonResponse({"user": request.user.username})
+    return JsonResponse({"user": None})
+
+
+@require_GET
+@ensure_csrf_cookie
+def csrf(request):
+    return JsonResponse({"ok": True})
