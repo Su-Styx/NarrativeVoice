@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "pipeline",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -137,3 +138,4 @@ CORS_ALLOWED_ORIGINS = [
 
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_RESULT_BACKEND = "redis://localhost:6379/1"
+
