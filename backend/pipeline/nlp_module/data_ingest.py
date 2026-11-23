@@ -7,7 +7,7 @@ from .models import TextEntity
 
 # max characters per chunk (roughly 4 chars per token). Keep well under the
 # model's context window, since the prompt and the output also need room.
-CHUNK_CHARS = {"qwen3:14b": 3000, "qwen3:8b": 2000}
+CHUNK_CHARS = {"qwen3:14b": 3000, "qwen3:1.7b": 1200}
 DEFAULT_MODEL = "qwen3:14b"
 
 
