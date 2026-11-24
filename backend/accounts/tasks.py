@@ -34,9 +34,11 @@ def run_pipeline(document_id):
         }
         result = run_nlp_pipeline(values)
         (run_dir / "result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+        doc.result = result
         doc.status = "done"
-    except Exception:
+    except Exception as e:
         doc.status = "failed"
+        doc.error = str(e)[-2000:]
         raise
     finally:
-        doc.save(update_fields=["status"])
+        doc.save(update_fields=["status", "result", "error"])

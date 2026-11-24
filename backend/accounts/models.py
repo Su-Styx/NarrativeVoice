@@ -8,3 +8,5 @@ class Document(models.Model):
     pdf = models.FileField(upload_to="pdfs/", null=True, blank=True)
     status = models.CharField(max_length=10, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
+    result = models.JSONField(null=True, blank=True)
+    error = models.TextField(blank=True, default="")

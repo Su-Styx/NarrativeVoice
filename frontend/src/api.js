@@ -1,9 +1,3 @@
-// function getCookie(name) {
-//   return document.cookie
-//     .split("; ")
-//     .find((row) => row.startsWith(name + "="))
-//     ?.split("=")[1];
-// }
 
 async function request(path, options = {}) {
   const res = await fetch(`/api${path}`, options);
@@ -31,14 +25,6 @@ function authHeaders() {
   return token ? { Authorization: `Token ${token}` } : {};
 }
 
-// export async function api(path, options = {}) {
-//   const res = await fetch("/api" + path, {
-//     ...options,
-//     headers: { "Content-Type": "application/json", ...authHeaders(), ...options.headers },
-//   });
-//   if (!res.ok) throw new Error(`Request failed (${res.status})`);
-//   return res.json();
-// }
 
 function getCookie(name) {
   const match = document.cookie.split("; ").find((c) => c.startsWith(name + "="));

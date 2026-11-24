@@ -28,10 +28,6 @@ def _body(request):
 
 
 
-
-
-
-
 def as_dict(doc):
     return {"id": doc.id, "title": doc.title, "status": doc.status}
 
@@ -59,6 +55,10 @@ def documents(request):
 @permission_classes([IsAuthenticated])
 def document_detail(request, pk):
     doc = get_object_or_404(Document, pk=pk, owner=request.user)
+    data = as_dict(doc)
+    data["result"] = doc.result
+    data["error"] = doc.error
+    return Response(data)
     return Response(as_dict(doc))
 
 
