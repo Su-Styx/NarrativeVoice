@@ -1,11 +1,9 @@
-# this file is to enable the creation and consolidation of a dictionary that holds a primary and ensuing per-chunk dataframes 
-# for the purpose of statistical analysis of the evidence based, extracted information 
+# this file is to enable the creation and consolidation of a dictionary that holds a primary and ensuing per-chunk dataframes
+# for the purpose of statistical analysis of the evidence based, extracted information
 # the dataframe will belong to a particular uploaded text/ run
 
 
 # the generated per-chunk json files will be parsed here, cleaned and loaded into the dataframe
-
-import pandas as pd 
 
 
 # dataframe has the following structure
@@ -15,3 +13,27 @@ import pandas as pd
 
 
 # note that eID == evidenceID, in notation x-XX | chunkSerialNumber | eID from chunk 7, extraction 13, would be 7-13
+
+
+from chunk_parse import load_chunk_dataframe
+
+OUTPUT_CSV = "extractions.csv"
+
+
+def main():
+    df = load_chunk_dataframe()
+    if df.empty:
+        print("No accepted extractions found.")
+        return
+
+    df.to_csv(OUTPUT_CSV, index=False)
+
+    # print(f"{len(df)} extractions across {df['chunk_id'].nunique()} chunks -> {OUTPUT_CSV}")
+    print(df.head)
+
+
+
+
+
+if __name__ == "__main__":
+    main()
