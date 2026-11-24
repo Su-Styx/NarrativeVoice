@@ -1,0 +1,26 @@
+services:
+  redis:
+    image: redis:7-alpine
+
+  backend:
+    build: ./backend
+    env_file: .env
+    command: sh -c "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    depends_on: [redis]
+    volumes: [data:/data]
+
+  worker:
+    build: ./backend
+    env_file: .env
+    command: celery -A config worker -l info --concurrency=1
+    depends_on: [redis]
+    volumes: [data:/data]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+
+  frontend:
+    build: ./frontend
+    ports: ["8080:80"]
+    depends_on: [backend]
+
+volumes:
+  data:
