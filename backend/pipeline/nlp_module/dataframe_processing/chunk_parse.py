@@ -4,7 +4,7 @@ from pathlib import Path
 from natsort import natsorted
 import pandas as pd
 
-from private_directories import chunk_directory
+from .private_directories import chunk_directory
 
 
 # def _natural_key(path: Path):

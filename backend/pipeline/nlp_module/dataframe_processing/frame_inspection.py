@@ -1,30 +1,27 @@
 import pandas as pd
 
-from chunk_parse import load_chunk_dataframe
 
 
-df = load_chunk_dataframe()
+def compute_metrics(df):
+    df = df.copy()
 
-print("Rows per field")
-print(df.groupby("field").size())
+    # rows per field
+    rows_per_field = df.groupby("field").size()
 
+    # items per chunk and field
+    parts = df["chunk_id"].str.partition(":")
+    df["chunk"] = parts[2].where(parts[1] != "", df["chunk_id"])
+    items_per_chunk = pd.crosstab(df["chunk"], df["field"])
 
-print("Items per chunk and field")
-parts = df["chunk_id"].str.partition(":")
-df["chunk"] = parts[2].where(parts[1] != "", df["chunk_id"])
-print(pd.crosstab(df["chunk"], df["field"]))
+    # 10 most common topics, experiences, challenges, themes
+    # stated_links are not quantified, they are for qualitative analysis and relationships
+    top_statements = {}
+    for field in ["topics", "experiences", "challenges", "themes"]:
+        counts = df[df["field"] == field]["statement"].str.lower().str.strip().value_counts()
+        top_statements[field] = counts.head(10).to_dict()
 
-
-
-# displays 10 most common topics, experiences, challenges,themes
-
-
-
-for field in ["topics", "experiences", "challenges", "themes"]:
-    print(f"\nTop 10 {field}")
-    # an attempt at normalising statements 
-    counts = df[df["field"] == field]["statement"].str.lower().str.strip().value_counts()
-    print(counts.head(10))
-
-    # note that stated_links are not quantified as it is only useful as qualitative analysis and analysing relationships 
-    
+    return {
+        "rows_per_field": rows_per_field.to_dict(),
+        "items_per_chunk": items_per_chunk.to_dict(orient="index"),
+        "top_statements": top_statements,
+    }

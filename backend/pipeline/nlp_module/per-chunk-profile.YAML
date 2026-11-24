@@ -8,6 +8,7 @@ description: >
 
 model:
   default: qwen3:14b
+  # default: qwen3:1.7b
   temperature: 0
   num_ctx: 4096
 

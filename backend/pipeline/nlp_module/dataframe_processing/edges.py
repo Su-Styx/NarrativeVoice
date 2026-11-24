@@ -2,7 +2,7 @@ import re
 
 import networkx as nx
 import pandas as pd
-import matplotlib.pyplot as plt
+
 
 
 
@@ -53,7 +53,8 @@ def to_graph(nodes: dict, edges: pd.DataFrame) -> nx.Graph:
 
 def save(nodes: dict, edges: pd.DataFrame) -> nx.Graph:
     G = to_graph(nodes, edges)
-    edges.to_csv("edges.csv", index=False)
+    if out_dir is not None:
+        edges.to_csv(Path(out_dir) / "edges.csv", index=False)
     # plt.show()
     # nx.draw(G, with_labels=True, node_color="lightblue", edge_color="gray")
     # plt.savefig("graph.png", dpi=300, bbox_inches="tight")  

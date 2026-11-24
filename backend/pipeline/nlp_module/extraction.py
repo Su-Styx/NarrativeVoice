@@ -11,12 +11,14 @@ from prompts import build_system_prompt, build_user_prompt
 def extract_from_chunk(
     profile: dict,
     chunk: dict,
+    think=False,
     model_tag: str | None = None,
 ) -> dict[str, Any]:
     model = model_tag or profile["model"]["default"]
     options = {
         "temperature": profile["model"]["temperature"],
         "num_ctx": profile["model"]["num_ctx"],
+        "num_predict": 3000
     }
 
     messages = [
