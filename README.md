@@ -55,34 +55,37 @@ with the host's ollama service
 
 The project is intended to be a quick and rough prototype, outlining a simple architectual concept for NarrativeVoice.
 The project prioritised a simple, working NLP pipeline to perform core AI-extraction tasks, that could then be wired into the full-stack application.
-Using Django and React, API endpoint management, User authentication and the model system, separate from the processing pipeline allow for a modular, upgradable approach. 
-The pipeline remains testable by prompting key files such as api_endpoint.py. 
+
+Using Django and React, API endpoint management, User authentication and the model system, separate from the processing pipeline allow for a modular, upgradable approach. Long-running work is handled by Celery tasks. The pipeline is run and promped through api_endpoint.py, so it can be tested without the web app. 
+
+Extraction uses a locally hosted model through Ollama. Each extracted statement references a quote and chunk, quotes are validated against the source text to ensure truths remain grounded. A dataframe is generated for each submitted text, using only validated fields(such as topic, experiences...), which allows for a consolidated method of generating statistics and overviews on the pipeline's output. 
 
 
 
 
 ### File tree
+```text
 NarrativeVoice/
 ├── backend/                     # Django API + Celery tasks
 │   ├── accounts/                # Users, documents, API views, Celery task (tasks.py)
-│   ├── config/                  # Django settings, URLs, Celery setup
+│   ├── config/                  
 │   ├── pipeline/
-│   │   └── nlp_module/          # NLP pipeline: chunking, extraction, validation, graph
+│   │   └── nlp_module/          # NLP pipeline: chunking, extraction, validation, graph and dataframe analysis
 │   ├── Dockerfile
 │   ├── manage.py
 │   └── requirements.txt
-├── frontend/                    # React app
+├── frontend/                   
 │   ├── public/
 │   ├── src/
 │   │   ├── pages/               # Upload, document list, DocumentView
-│   │   ├── api.js               # API client
-│   │   ├── auth.jsx             # Auth context
+│   │   ├── api.js              
+│   │   ├── auth.jsx             
 │   │   ├── ProtectedRoute.jsx
 │   │   └── App.jsx
 │   ├── Dockerfile
-│   ├── nginx.conf              
+│   ├── nginx.conf             
 │   └── package.json
-├── docker-compose.yml           
-├── .env.example                
+├── docker-compose.yml          
+├── .env.example            
 └── README.md
-
+```
